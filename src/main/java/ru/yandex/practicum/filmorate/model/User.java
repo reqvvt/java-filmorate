@@ -1,9 +1,11 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,5 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
     int id;
+    String email;
     String name;
+    String login;
+    LocalDate birthday;
 }
