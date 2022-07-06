@@ -14,15 +14,15 @@ public class User {
     @Email
     @NotBlank
     @NonNull
-    String email;
+    private String email;
 
     @NotBlank
     @NonNull
-    String login;
+    private String login;
 
     @NonNull
-    String name;
+    private String name;
 
     @NonNull
-    LocalDate birthday;
+    private LocalDate birthday;
 }

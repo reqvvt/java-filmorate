@@ -16,16 +16,16 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/films")
 public class FilmController {
-    private final List<Film> filmsList = new ArrayList<>();
+    private List<Film> filmsList = new ArrayList<>();
     private int id;
 
     @GetMapping
-    public List<Film> returnFilms() {
+    public List<Film> films() {
         log.debug("На данный момент зарегистрировано " + filmsList.size() + " фильмов.");
         return filmsList;
     }
     @PostMapping
-    public Film add(@RequestBody @Valid Film film) {
+    public Film addFilm(@RequestBody @Valid Film film) {
         validate(film);
         film.setId(++id);
         filmsList.add(film);
@@ -38,7 +38,7 @@ public class FilmController {
         log.info("Информация фильма " + film.getName() + " обновлена");
         return film;
     }
-    void validate(Film film) {
+    private void validate(Film film) {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Введена неверная дата релиза");
         } else if (film.getDuration().isNegative()) {

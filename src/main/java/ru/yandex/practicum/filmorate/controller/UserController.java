@@ -38,7 +38,7 @@ public class UserController {
         log.info("Информация пользователя " + user.getName() + " обновлена");
         return user;
     }
-    void validate(User user) {
+    private void validate(User user) {
         if (user.getLogin().trim().isEmpty()) {
             throw new ValidationException("Логин пуст");
         } else if (user.getLogin().contains(" ")) {

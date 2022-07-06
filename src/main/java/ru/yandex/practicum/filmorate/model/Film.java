@@ -14,16 +14,16 @@ public class Film {
     private int id;
     @NotBlank
     @NonNull
-    final private String name;
+    private String name;
 
     @NotBlank
     @NonNull
     @Size(max = 200)
-    final private String description;
+    private String description;
 
     @NonNull
-    final private LocalDate releaseDate;
+    private LocalDate releaseDate;
 
     @NonNull
-    final private Duration duration;
+    private Duration duration;
 }
