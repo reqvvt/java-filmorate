@@ -21,7 +21,7 @@ class UserControllerTest {
     void addFilledAndValidEmail() {
         User user = new User("user@gmail.com", "user", "Evgeniy",
                 LocalDate.of(1996, 1, 1));
-        User response = userController.add(user);
+        User response = userController.addUser(user);
 
         Assertions.assertEquals(user, response);
     }
@@ -30,7 +30,7 @@ class UserControllerTest {
     void notAddWithUnfilledEmail() {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
-                () -> userController.add(new User("", "user", "Evgeniy",
+                () -> userController.addUser(new User("", "user", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
         Assertions.assertEquals(exception.getMessage(), "add.user.email: не должно быть пустым");
@@ -40,7 +40,7 @@ class UserControllerTest {
     void notAddIfBirthdayInFuture() {
         final ValidationException exception = assertThrows(
                 ValidationException.class,
-                () -> userController.add(new User("user@gmail.com", "user", "Evgeniy",
+                () -> userController.addUser(new User("user@gmail.com", "user", "Evgeniy",
                         LocalDate.of(2050, 1, 1))));
 
         Assertions.assertEquals(exception.getMessage(), "Указана дата рождения из будущего");
@@ -50,7 +50,7 @@ class UserControllerTest {
     void addWithoutAtInEmail() {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
-                () -> userController.add(new User("privet.com", "user", "Evgeniy",
+                () -> userController.addUser(new User("privet.com", "user", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
         Assertions.assertEquals(exception.getMessage(), "add.user.email: должно иметь формат адреса электронной почты");
@@ -60,7 +60,7 @@ class UserControllerTest {
     void addWithFilledLoginWithoutSpaces() {
         User user = new User("user@gmail.com", "user", "Evgeniy",
                 LocalDate.of(1996, 1, 1));
-        User response = userController.add(user);
+        User response = userController.addUser(user);
 
         Assertions.assertEquals(user, response);
     }
@@ -69,7 +69,7 @@ class UserControllerTest {
     void notAddWithEmptyLogin() {
         final ConstraintViolationException exception = assertThrows(
                 ConstraintViolationException.class,
-                () -> userController.add(new User("user@gmail.com", "", "Evgeniy",
+                () -> userController.addUser(new User("user@gmail.com", "", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
         Assertions.assertEquals(exception.getMessage(), "add.user.login: не должно быть пустым");
@@ -79,7 +79,7 @@ class UserControllerTest {
     void notAddWithSpacesInLogin() {
         final ValidationException exception = assertThrows(
                 ValidationException.class,
-                () -> userController.add(new User("user@gmail.com", "user 1", "Evgeniy",
+                () -> userController.addUser(new User("user@gmail.com", "user 1", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
         Assertions.assertEquals(exception.getMessage(), "Логин не должен содержать пробел");
@@ -89,7 +89,7 @@ class UserControllerTest {
     void addLoginAsNameIfNameIsEmpty() {
         User user = new User("user@gmail.com", "user", "",
                 LocalDate.of(1996, 1, 1));
-        User response = userController.add(user);
+        User response = userController.addUser(user);
         String savedName = response.getName();
         String login = response.getLogin();
 

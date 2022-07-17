@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -16,21 +18,37 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
+    @Autowired
+    UserService userService;
     private final List<User> usersList = new ArrayList<>();
-    private int id;
+    private int userId;
 
     @GetMapping
-    public List<User> findAll() {
+    public List<User> users() {
         log.debug("На данный момент зарегистрировано " + usersList.size() + " пользователей.");
         return usersList;
     }
+
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable int userId) {
+        return userService.get(userId);
+    }
     @PostMapping
-    public User add(@RequestBody @Valid User user) {
+    public User addUser(@RequestBody @Valid User user) {
         validate(user);
-        user.setId(++id);
-        usersList.add(user);
+        User saved = userService.save(user);
         log.info("Пользователь " + user.getName() + " добавлен");
-        return user;
+        return saved;
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@PathVariable int userId, @PathVariable int friendId) {
+        userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void deleteFriend(@PathVariable int userId, @PathVariable int friendId) {
+        userService.deleteFriend(userId, friendId);
     }
     @PutMapping
     public User update(@RequestBody @Valid User user) {

@@ -1,10 +1,14 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -16,21 +20,38 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/films")
 public class FilmController {
+
+    @Autowired
+    FilmService filmService;
     private List<Film> filmsList = new ArrayList<>();
-    private int id;
+    private int filmId;
 
     @GetMapping
     public List<Film> films() {
         log.debug("На данный момент зарегистрировано " + filmsList.size() + " фильмов.");
         return filmsList;
     }
+
+    @GetMapping("/{filmId}")
+    public Film getFilm(@PathVariable int filmId) {
+        return filmService.get(filmId);
+    }
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
         validate(film);
-        film.setId(++id);
-        filmsList.add(film);
+        Film saved = filmService.save(film);
         log.info("Фильм " + film.getName() + " зарегистрирован");
-        return film;
+        return saved;
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public void addLike(@PathVariable int filmId, @PathVariable int userId) {
+        filmService.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void deleteLike(@PathVariable int filmId, @PathVariable int userId) {
+        filmService.deleteLike(filmId, userId);
     }
     @PutMapping
     public Film update(@RequestBody @Valid Film film) {
