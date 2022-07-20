@@ -4,13 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -18,55 +17,67 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
+
+    private final UserService userService;
+
     @Autowired
-    UserService userService;
-    private final List<User> usersList = new ArrayList<>();
-    private int userId;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    public List<User> users() {
-        log.debug("На данный момент зарегистрировано " + usersList.size() + " пользователей.");
-        return usersList;
+    public Collection<User> getAll() {
+        log.debug("На данный момент зарегистрировано " + userService.getAll()
+                                                                    .size() + " пользователей.");
+        return userService.getAll();
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable int userId) {
-        return userService.get(userId);
+    public User getUser(@PathVariable Integer userId) throws NotFoundException {
+        log.info("Пользователь " + userService.getUser(userId)
+                                              .getName() + " возвращен");
+        return userService.getUser(userId);
     }
+
     @PostMapping
     public User addUser(@RequestBody @Valid User user) {
-        validate(user);
-        User saved = userService.save(user);
         log.info("Пользователь " + user.getName() + " добавлен");
-        return saved;
+        return userService.addUser(user);
+    }
+
+    @PutMapping
+    public User updateUser(@RequestBody @Valid User user) {
+        log.info("Пользователь " + user.getName() + " обновлён");
+        return userService.updateUser(user);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
     public void addFriend(@PathVariable int userId, @PathVariable int friendId) {
+        log.info("Друг " + userService.getUser(friendId)
+                                      .getName() + " добавлен");
         userService.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
     public void deleteFriend(@PathVariable int userId, @PathVariable int friendId) {
+        log.info("Друг " + userService.getUser(friendId)
+                                      .getName() + " удалён");
         userService.deleteFriend(userId, friendId);
     }
-    @PutMapping
-    public User update(@RequestBody @Valid User user) {
-        usersList.replaceAll(e -> e.getId() == user.getId() ? user : e);
-        log.info("Информация пользователя " + user.getName() + " обновлена");
-        return user;
-    }
-    private void validate(User user) {
-        if (user.getLogin().trim().isEmpty()) {
-            throw new ValidationException("Логин пуст");
-        } else if (user.getLogin().contains(" ")) {
-            throw new ValidationException("Логин не должен содержать пробел");
-        } else if (user.getName().trim().isEmpty()) {
-            log.info("Имени присвоено значение логина");
-            user.setName(user.getLogin());
-        } else if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("Указана дата рождения из будущего");
-        }
+
+    @GetMapping("/{userId}/friends")
+    public List<User> getUserFriends(@PathVariable Integer userId) {
+        log.info("У вас " + userService.getUser(userId)
+                                       .getFriendIds()
+                                       .size() + " друзей");
+        return userService.getUserFriends(userId);
     }
 
+    @GetMapping("/{userId}/friends/common/{friendId}")
+    public List<User> getCommonFriends(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        log.info("У вас " + userService.getUser(userId)
+                                       .getFriendIds()
+                                       .size() + " общих друзей");
+        return userService.getCommonFriends(userId, friendId);
+    }
 }

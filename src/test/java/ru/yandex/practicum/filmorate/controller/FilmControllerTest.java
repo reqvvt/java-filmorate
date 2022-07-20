@@ -46,7 +46,7 @@ class FilmControllerTest {
         Film updatedFilm = new Film("Film 1", "Description",
                 LocalDate.of(2001, 12, 12), Duration.ofHours(2));
         updatedFilm.setId(response.getId());
-        Film updateResponse = filmController.update(updatedFilm);
+        Film updateResponse = filmController.updateFilm(updatedFilm);
 
         Assertions.assertEquals(updateResponse, updatedFilm);
     }

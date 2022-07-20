@@ -31,5 +31,5 @@ public class Film {
     private Duration duration;
 
     @JsonIgnore
-    Set<Integer> userIds = new HashSet<>();
+    Set<Integer> likes = new HashSet<>();
 }
