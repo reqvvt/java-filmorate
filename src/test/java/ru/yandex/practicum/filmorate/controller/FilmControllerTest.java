@@ -34,7 +34,7 @@ class FilmControllerTest {
                 () -> filmController.addFilm(new Film("", "Description",
                         LocalDate.of(2001, 12, 12), Duration.ofHours(2))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.film.name: не должно быть пустым");
+        Assertions.assertEquals(exception.getMessage(), "addFilm.film.name: must not be blank");
     }
 
     @Test
@@ -46,7 +46,7 @@ class FilmControllerTest {
         Film updatedFilm = new Film("Film 1", "Description",
                 LocalDate.of(2001, 12, 12), Duration.ofHours(2));
         updatedFilm.setId(response.getId());
-        Film updateResponse = filmController.update(updatedFilm);
+        Film updateResponse = filmController.updateFilm(updatedFilm);
 
         Assertions.assertEquals(updateResponse, updatedFilm);
     }
@@ -62,7 +62,7 @@ class FilmControllerTest {
                 () -> filmController.addFilm(new Film("", "Description",
                         LocalDate.of(2001, 12, 12), Duration.ofHours(2))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.film.name: не должно быть пустым");
+        Assertions.assertEquals(exception.getMessage(), "addFilm.film.name: must not be blank");
     }
 
     @Test
@@ -85,7 +85,7 @@ class FilmControllerTest {
                         "обращается за помощью к бывшему сослуживцу Дмитрию",
                         LocalDate.of(2001, 12, 12), Duration.ofHours(2))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.film.description: размер должен находиться в диапазоне от 0 до 200");
+        Assertions.assertEquals(exception.getMessage(), "addFilm.film.description: size must be between 0 and 200");
     }
 
     @Test
@@ -95,7 +95,7 @@ class FilmControllerTest {
                 () -> filmController.addFilm(new Film("Film", "",
                         LocalDate.of(2001, 12, 12), Duration.ofHours(2))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.film.description: не должно быть пустым");
+        Assertions.assertEquals(exception.getMessage(), "addFilm.film.description: must not be blank");
     }
 
     @Test
@@ -134,7 +134,7 @@ class FilmControllerTest {
                 () -> filmController.addFilm(new Film("Film", "Description",
                         LocalDate.of(1895, 12, 29), Duration.ofSeconds(-1))));
 
-        Assertions.assertEquals(exception.getMessage(), "Продолжительность не может быть отрицательной или равно нулю");
+        Assertions.assertEquals(exception.getMessage(), "Продолжительность не может быть отрицательной или равна нулю");
     }
 }
 
