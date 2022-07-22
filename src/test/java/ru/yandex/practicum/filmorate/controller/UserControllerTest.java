@@ -33,7 +33,7 @@ class UserControllerTest {
                 () -> userController.addUser(new User("", "user", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.user.email: не должно быть пустым");
+        Assertions.assertEquals(exception.getMessage(), "addUser.user.email: не должно быть пустым");
     }
 
     @Test
@@ -53,7 +53,7 @@ class UserControllerTest {
                 () -> userController.addUser(new User("privet.com", "user", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.user.email: должно иметь формат адреса электронной почты");
+        Assertions.assertEquals(exception.getMessage(), "addUser.user.email: должно иметь формат адреса электронной почты");
     }
 
     @Test
@@ -72,7 +72,7 @@ class UserControllerTest {
                 () -> userController.addUser(new User("user@gmail.com", "", "Evgeniy",
                         LocalDate.of(1996, 1, 1))));
 
-        Assertions.assertEquals(exception.getMessage(), "add.user.login: не должно быть пустым");
+        Assertions.assertEquals(exception.getMessage(), "addUser.user.login: не должно быть пустым");
     }
 
     @Test

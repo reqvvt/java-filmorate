@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
@@ -51,9 +51,7 @@ public class FilmService {
         if (filmStorage.getFilm(filmId) == null) {
             throw new NotFoundException(String.format("Film id = %s не найден", filmId));
         }
-        filmStorage.getFilm(filmId)
-                   .getLikes()
-                   .add(userId);
+        filmStorage.getFilm(filmId).getLikes().add(userId);
     }
 
     public void deleteLike(Integer filmId, Integer userId) {
@@ -63,17 +61,13 @@ public class FilmService {
         if (filmStorage.getFilm(filmId) == null) {
             throw new NotFoundException(String.format("Film id = %s не найден", filmId));
         }
-        filmStorage.getFilm(filmId)
-                   .getLikes()
-                   .remove(userId);
+        filmStorage.getFilm(filmId).getLikes().remove(userId);
     }
 
     public List<Film> getPopularFilms(Integer count) {
         return filmStorage.getAll()
                           .stream()
-                          .sorted(((o1, o2) -> o2.getLikes()
-                                                 .size() - o1.getLikes()
-                                                             .size()))
+                          .sorted(((o1, o2) -> o2.getLikes().size() - o1.getLikes().size()))
                           .limit(count)
                           .collect(Collectors.toList());
     }
@@ -82,8 +76,7 @@ public class FilmService {
         if (film.getReleaseDate()
                 .isBefore(LocalDate.of(1895, 12, 28))) {
             throw new ValidationException("Введена неверная дата релиза");
-        } else if (film.getDuration()
-                       .isNegative()) {
+        } else if (film.getDuration().isNegative()) {
             throw new ValidationException("Продолжительность не может быть отрицательной или равна нулю");
         }
     }

@@ -1,10 +1,16 @@
 package ru.yandex.practicum.filmorate.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class NotFoundException extends RuntimeException {
-    String message;
+    private final String message;
+
     public NotFoundException(String message) {
         this.message = message;
     }
+
     public String getMessage() {
         return message;
     }

@@ -26,15 +26,13 @@ public class FilmController {
 
     @GetMapping
     public Collection<Film> getAll() {
-        log.debug("На данный момент зарегистрировано " + filmService.getAll()
-                                                                    .size() + " фильмов.");
+        log.debug("На данный момент зарегистрировано " + filmService.getAll().size() + " фильмов.");
         return filmService.getAll();
     }
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable Integer filmId) {
-        log.info("Фильм " + filmService.getFilm(filmId)
-                                       .getName() + " возвращён");
+        log.info("Фильм " + filmService.getFilm(filmId).getName() + " возвращён");
         return filmService.getFilm(filmId);
     }
 
@@ -52,15 +50,13 @@ public class FilmController {
 
     @PutMapping("/{filmId}/like/{userId}")
     public void addLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId)
-                                               .getName() + " добавлен");
+        log.info("Лайк к фильму " + filmService.getFilm(filmId).getName() + " добавлен");
         filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public void deleteLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId)
-                                               .getName() + " удалён");
+        log.info("Лайк к фильму " + filmService.getFilm(filmId).getName() + " удалён");
         filmService.deleteLike(filmId, userId);
     }
 

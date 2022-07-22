@@ -6,7 +6,6 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,5 +32,5 @@ public class User {
     private LocalDate birthday;
 
     @JsonIgnore
-    Set<Integer> friendIds = new HashSet<>();
+    private Set<Integer> friendIds = new HashSet<>();
 }
