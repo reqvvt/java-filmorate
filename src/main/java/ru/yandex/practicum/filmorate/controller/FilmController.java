@@ -32,31 +32,31 @@ public class FilmController {
 
     @GetMapping("/{filmId}")
     public Film getFilm(@PathVariable Integer filmId) {
-        log.info("Фильм " + filmService.getFilm(filmId).getName() + " возвращён");
+        log.info("Фильм " + filmService.getFilm(filmId).getTitle() + " возвращён");
         return filmService.getFilm(filmId);
     }
 
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
-        log.info("Фильм " + film.getName() + " добавлен");
+        log.info("Фильм " + film.getTitle() + " добавлен");
         return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
-        log.info("Фильм " + film.getName() + " обновлён");
+        log.info("Фильм " + film.getTitle() + " обновлён");
         return filmService.updateFilm(film);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
     public void addLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId).getName() + " добавлен");
+        log.info("Лайк к фильму " + filmService.getFilm(filmId).getTitle() + " добавлен");
         filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public void deleteLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId).getName() + " удалён");
+        log.info("Лайк к фильму " + filmService.getFilm(filmId).getTitle() + " удалён");
         filmService.deleteLike(filmId, userId);
     }
 

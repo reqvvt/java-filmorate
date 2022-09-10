@@ -1,36 +1,37 @@
 package ru.yandex.practicum.filmorate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
     private int id;
 
-    @Email
-    @NotBlank
-    @NonNull
+    @Email(message = "email should be like: example@mail.com")
+    @NotBlank(message = "email can't be empty")
+    @NotNull(message = "email can't be null")
     private String email;
 
-    @NotBlank
-    @NonNull
+    @NotBlank(message = "login can't be empty")
+    @NotNull(message = "login can't be null")
     private String login;
 
-    @NonNull
+    @NotBlank(message = "name can't be empty")
+    @NotNull(message = "name can't be null")
     private String name;
 
-    @NonNull
+    @NotNull(message = "birthday can't be null")
     private LocalDate birthday;
 
-    @JsonIgnore
     private Set<Integer> friendIds = new HashSet<>();
 }
