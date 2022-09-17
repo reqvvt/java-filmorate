@@ -26,8 +26,8 @@ public class UserController {
 
     @GetMapping
     public Collection<User> getAll() {
-        log.debug("На данный момент зарегистрировано " + userService.getAll().size() + " пользователей.");
-        return userService.getAll();
+        log.debug("На данный момент зарегистрировано " + userService.getAllUsers().size() + " пользователей.");
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")

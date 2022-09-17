@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -21,16 +22,16 @@ public class UserService {
     private final UserStorage userStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    public Collection<User> getAll() {
-        return userStorage.getAll();
+    public Collection<User> getAllUsers() {
+        return userStorage.getAllUsers();
     }
 
     public User getUser(Integer userId) throws NotFoundException {
-        return userStorage.getUser(userId);
+        return userStorage.getUserById(userId);
     }
 
     public User addUser(User user) {
@@ -49,10 +50,10 @@ public class UserService {
                     friendId));
         }
         try {
-            userStorage.getUser(userId).getFriendIds().add(friendId);
-            userStorage.getUser(friendId).getFriendIds().add(userId);
+            userStorage.getUserById(userId).getFriendIds().add(friendId);
+            userStorage.getUserById(friendId).getFriendIds().add(userId);
         } catch (NotFoundException e) {
-            System.out.println(String.format("User id = %s или Friend id = %s не найден", userId, friendId));
+            System.out.printf("User id = %s или Friend id = %s не найден%n", userId, friendId);
         }
     }
 
@@ -61,28 +62,28 @@ public class UserService {
             throw new NotFoundException(String.format("User id = %s или Friend id = %s не могут быть меньше 0", userId,
                     friendId));
         }
-        if (userStorage.getUser(userId) == null) {
+        if (userStorage.getUserById(userId) == null) {
             throw new NotFoundException(String.format("User с id = %s не найден", userId));
         }
         try {
-            userStorage.getUser(userId).getFriendIds().remove(friendId);
-            userStorage.getUser(friendId).getFriendIds().remove(userId);
+            userStorage.getUserById(userId).getFriendIds().remove(friendId);
+            userStorage.getUserById(friendId).getFriendIds().remove(userId);
         } catch (NotFoundException e) {
-            System.out.println(String.format("User id = %s или Friend id = %s не найден", userId, friendId));
+            System.out.printf("User id = %s или Friend id = %s не найден%n", userId, friendId);
         }
     }
 
     public List<User> getUserFriends(Integer userId) throws NotFoundException {
-        return userStorage.getAll()
+        return userStorage.getAllUsers()
                           .stream()
-                          .filter(user -> userStorage.getUser(userId).getFriendIds().contains(userId))
+                          .filter(user -> userStorage.getUserById(userId).getFriendIds().contains(userId))
                           .collect(Collectors.toList());
     }
 
     public List<User> getCommonFriends(Integer userId, Integer friendId) throws NotFoundException {
-        Collection<Integer> userFriendList = new ArrayList<>(userStorage.getUser(userId).getFriendIds());
-        userFriendList.retainAll(userStorage.getUser(friendId).getFriendIds());
-        return userStorage.getAll()
+        Collection<Integer> userFriendList = new ArrayList<>(userStorage.getUserById(userId).getFriendIds());
+        userFriendList.retainAll(userStorage.getUserById(friendId).getFriendIds());
+        return userStorage.getAllUsers()
                           .stream()
                           .filter(user -> userFriendList.contains(user.getId()))
                           .collect(Collectors.toList());
