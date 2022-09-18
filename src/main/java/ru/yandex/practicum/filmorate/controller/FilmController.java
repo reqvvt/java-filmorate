@@ -25,44 +25,44 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> getAll() {
-        log.debug("На данный момент зарегистрировано " + filmService.getAll().size() + " фильмов.");
-        return filmService.getAll();
+    public Collection<Film> getAllFilms() {
+        log.debug("Получен запрос GET /films");
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/{filmId}")
-    public Film getFilm(@PathVariable Integer filmId) {
-        log.info("Фильм " + filmService.getFilm(filmId).getTitle() + " возвращён");
-        return filmService.getFilm(filmId);
+    public Film getFilmById(@PathVariable("filmId") Integer filmId) {
+        log.info("Получен запрос GET /films по id {}", filmId);
+        return filmService.getFilmById(filmId);
     }
 
     @PostMapping
     public Film addFilm(@RequestBody @Valid Film film) {
-        log.info("Фильм " + film.getTitle() + " добавлен");
+        log.info("Получен запрос POST /films");
         return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody @Valid Film film) {
-        log.info("Фильм " + film.getTitle() + " обновлён");
+        log.debug("Получен запрос PUT (updateFilm). Фильм обновлен {}", film);
         return filmService.updateFilm(film);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
-    public void addLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId).getTitle() + " добавлен");
+    public void addLike(@PathVariable("filmId") Integer filmId, @PathVariable("userId") Integer userId) {
+        log.debug("Получен запрос PUT (addLike). От пользователя {} к фильму {}", userId, filmId);
         filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public void deleteLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("Лайк к фильму " + filmService.getFilm(filmId).getTitle() + " удалён");
-        filmService.deleteLike(filmId, userId);
+    public void deleteLike(@PathVariable("filmId") Integer filmId, @PathVariable("userId") Integer userId) {
+        log.info("Получен запрос DELETE (removeLike). От пользователя {} к фильму {}", userId, filmId);
+        filmService.removeLike(filmId, userId);
     }
 
-    @GetMapping("/popular?count={count}")
-    public List<Film> getPopularFilms(@PathVariable(required = false) @RequestParam(defaultValue = "10") Integer count) {
-        log.info("Список популярных фильмов возвращен");
-        return filmService.getPopularFilms(count);
+    @GetMapping("/popular")
+    public List<Film> getTopRatedFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+        log.info("Получен запрос GET для /films/popular (getTopRatedFilms)");
+        return filmService.getTopRatedFilms(count);
     }
 }

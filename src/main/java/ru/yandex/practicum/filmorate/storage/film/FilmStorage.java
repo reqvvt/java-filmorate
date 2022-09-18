@@ -16,7 +16,7 @@ public interface FilmStorage {
 
     Film updateFilm(@Valid @RequestBody Film film);
 
-    void deleteFilm(Integer id);
+    void deleteFilm(Integer filmId);
 
     List<Film> getTopRatedFilms(Integer count);
 
