@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
 import java.util.Collection;
@@ -47,6 +48,10 @@ public class FilmDbStorage implements FilmStorage {
     public Film addFilm(Film film) {
         jdbcTemplate.update("INSERT INTO  FILMS (TITLE, DESCRIPTION, RELEASE_DATE, DURATION, RATING_ID) VALUES (?, ?, ?, ?, ?)",
                 film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId());
+        if (film.getGenres() != null) {
+            List<Genre> genres = removeGenreDuplicate(film);
+            genreStorage.assignGenreToTheFilm(film.getId(), genres);
+        }
         return getFilmById(film.getId());
     }
 
@@ -54,6 +59,11 @@ public class FilmDbStorage implements FilmStorage {
     public Film updateFilm(Film film) {
         jdbcTemplate.update("UPDATE FILMS SET TITLE = ?, DESCRIPTION = ?, RELEASE_DATE = ?, DURATION = ?, RATING_ID = ? " +
                 "WHERE FILM_ID = ?", film.getTitle(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId(), film.getId());
+        if (film.getGenres() != null) {
+            List<Genre> genres = removeGenreDuplicate(film);
+            genreStorage.deleteGenreByFilm(film.getId());
+            genreStorage.assignGenreToTheFilm(film.getId(), genres);
+        }
         return getFilmById(film.getId());
     }
 
@@ -86,5 +96,10 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Integer> getFilmLikes(Integer filmId) {
         return jdbcTemplate.queryForList("SELECT USER_ID FROM LIKES WHERE FILM_ID = ?", Integer.class, filmId);
+    }
+
+    private List<Genre> removeGenreDuplicate(Film film) {
+        film.setGenres(film.getGenres().stream().distinct().collect(Collectors.toList()));
+        return film.getGenres();
     }
 }
