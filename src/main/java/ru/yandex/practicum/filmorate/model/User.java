@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -31,7 +29,5 @@ public class User {
     private String name;
 
     @NotNull(message = "birthday can't be null")
-    private LocalDate birthday;
-
-    private Set<Integer> friendIds = new HashSet<>();
+    private Date birthday;
 }
